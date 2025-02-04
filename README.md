@@ -8,9 +8,6 @@
 This is a Kotlin Multiplatform project targeting Android, iOS, Desktop. (wasm support will be added)
 
 
-
-## Process of Ktor integration:
-
 ### Screenshots:
 
 - Platforms to run:
