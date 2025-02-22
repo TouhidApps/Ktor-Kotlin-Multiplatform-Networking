@@ -47,18 +47,27 @@ import ktorkotlinmultiplatformnetworking.composeapp.generated.resources.compose_
 import org.koin.compose.KoinApplication
 import com.touhidapps.ktor.di.appModule
 import okio.FileSystem
+import org.koin.core.context.startKoin
+import org.koin.mp.KoinPlatformTools
 
 @Composable
 @Preview
 fun App() {
 
-    /**
-     * By using KoinApplication inside compose App,
-     * we don't need to declare startKoin so code is less
-     */
-    KoinApplication(application = {
-        modules(appModule)
-    }) {
+    var isKoinInitialized by remember { mutableStateOf(false) } // To avoid execution of UI before Koin
+
+    LaunchedEffect(Unit) {
+        // To avoid already initialize exception
+        val alreadyExists = KoinPlatformTools.defaultContext().getOrNull() != null
+        if (!alreadyExists) {
+            startKoin {
+                modules(appModule)
+            }
+        }
+        isKoinInitialized = true
+    }
+
+    if (isKoinInitialized) {
         MaterialTheme {
 
             val viewModelFlower: FlowerViewModel = koinViewModel() // For Koin DI + ViewModel
